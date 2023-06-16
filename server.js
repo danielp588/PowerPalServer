@@ -6,7 +6,7 @@ const server = express();
 
 async function connect() {
   try {
-    await mongoose.connect(process.env.DATABASE_URL);
+    await mongoose.connect(process.env.DATABASE_URL); 
     console.log("Connected to MongoDB");
   } catch (error) {
     console.error(error);
@@ -23,7 +23,7 @@ server.use(express.json());
 
 //Routes
 const userRouter = require("./routes/userRoutes");
-server.use("/users", userRouter);
+server.use("/api/users", userRouter);
 
 const stationRouter = require("./routes/stationRouters");
-server.use("/stations", stationRouter);
+server.use("/api/stations", stationRouter);
