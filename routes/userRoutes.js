@@ -14,6 +14,7 @@ userRouter.get("/", async (req, res) => {
 
 userRouter.get("/login", async (req, res) => {
   try {
+    console.log("body:" , username, password)
     // finds one user that matches the unique username
     const user = await User.findOne({ username: req.body.username });
 
