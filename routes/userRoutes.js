@@ -12,9 +12,9 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
-userRouter.get("/login", async (req, res) => {
+userRouter.post("/login", async (req, res) => {
   try {
-    console.log("body:" , username, password)
+    console.log("body:" , req.body.username, req.body.password)
     // finds one user that matches the unique username
     const user = await User.findOne({ username: req.body.username });
 
