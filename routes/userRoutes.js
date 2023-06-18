@@ -44,8 +44,14 @@ userRouter.post("/register", async (req, res) => {
     await user.save(); // Saves the user to the database
     res.status(201).send("User added");
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Registration error:", error);
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.username) {
+      res.status(400).json({ error: "Username already exists" });
+    } else if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+      res.status(400).json({ error: "Email already exists" });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 });
 
