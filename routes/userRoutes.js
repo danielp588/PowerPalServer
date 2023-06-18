@@ -34,6 +34,11 @@ userRouter.post("/login", async (req, res) => {
 // username & email fields are unique, if sent a duplicate -> error is thrown
 userRouter.post("/register", async (req, res) => {
   try {
+
+    if (!req.body.username || !req.body.password || !req.body.firstname || !req.body.lastname || !req.body.email) {
+      return res.status(400).json({ error: "Please provide all required fields" });
+    }
+
     const user = new User({
       username: req.body.username,
       password: await bcrypt.hash(req.body.password, 10),
@@ -45,6 +50,7 @@ userRouter.post("/register", async (req, res) => {
     res.status(201).send("User added");
   } catch (error) {
     console.error("Registration error:", error);
+
     if (error.code === 11000 && error.keyPattern && error.keyPattern.username) {
       res.status(400).json({ error: "Username already exists" });
     } else if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
