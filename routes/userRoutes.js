@@ -101,7 +101,7 @@ userRouter.put("/update/password/:userId", async (req, res) => {
     }
     //Affirmation that is it the legit user who wants to change password
     const oldPassword = req.body.oldPassword;
-    if(!await bcrypt.compare(oldPassword, user.password)){
+    if (!(await bcrypt.compare(oldPassword, user.password))) {
       return res.status(404).json({ error: "Wrong old password" });
     }
 
@@ -109,18 +109,17 @@ userRouter.put("/update/password/:userId", async (req, res) => {
     user.password = await bcrypt.hash(req.body.newPassword, 10);
 
     await user.save(); // Save the updated user to the database
-    res.status(200).send("User updated");
+    res.status(200).send("Password changed");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-//refine the following methods
 userRouter.post("/addStation/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { station_ID, x, y } = req.body;
+    const { station_ID, X, Y } = req.body;
 
     // Find the user by ID
     const user = await User.findById(userId);
@@ -132,12 +131,12 @@ userRouter.post("/addStation/:userId", async (req, res) => {
     // Create a new station object
     const station = {
       station_ID,
-      x,
-      y,
+      X,
+      Y,
     };
 
     // Add the station to the user's stations array
-    user.stations.push(station);
+    user.myStations.push(station);
 
     // Save the updated user record
     await user.save();
@@ -148,5 +147,38 @@ userRouter.post("/addStation/:userId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-//that's it
+
+userRouter.delete("/deleteStation/:userId/:stationId", async (req, res) => {
+  try {
+    const { userId, stationId } = req.params;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Find the index of the station to be deleted in the user's stations array
+    const stationIndex = user.myStations.findIndex(
+      (station) => station.station_ID == stationId
+    );
+
+    if (stationIndex == -1) {
+      return res.status(404).json({ msg: "Station not found" });
+    }
+
+    // Remove the station from the user's stations array
+    user.myStations.splice(stationIndex, 1);
+
+    // Save the updated user record
+    await user.save();
+
+    res.status(200).json({ msg: "Station deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = userRouter;
