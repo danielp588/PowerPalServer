@@ -116,6 +116,27 @@ userRouter.put("/update/password/:userId", async (req, res) => {
   }
 });
 
+userRouter.get("/getStations/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Get the user's stations
+    const stations = user.myStations;
+
+    res.status(200).json(stations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 userRouter.post("/addStation/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
