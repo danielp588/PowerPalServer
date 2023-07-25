@@ -140,7 +140,7 @@ userRouter.get("/getStations/:userId", async (req, res) => {
 userRouter.post("/addStation/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { station_ID, X, Y } = req.body;
+    const { station_ID, station_name, X, Y } = req.body;
 
     // Find the user by ID
     const user = await User.findById(userId);
@@ -149,9 +149,19 @@ userRouter.post("/addStation/:userId", async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
+    // Check if the station with the same station_ID already exists
+    const existingStation = user.myStations.find(
+      (station) => station.station_ID === station_ID
+    );
+
+    if (existingStation) {
+      return res.status(400).json({ msg: "Station with the same ID already exists" });
+    }
+
     // Create a new station object
     const station = {
       station_ID,
+      station_name,
       X,
       Y,
     };
