@@ -28,4 +28,30 @@ stationRouter.get("/", (req, res) => {
   }
 });
 
+stationRouter.get("/limit=:limit", (req, res) => {
+  try {
+    const filePath = "./data/stations.csv";
+    const results = [];
+    const limit = req.params.limit;
+    
+    fs.createReadStream(filePath)
+      .pipe(
+        csvParser({
+          mapHeaders: ({ header }) => header.trim(),
+        })
+      )
+      .on("data", (row) => {
+        if (results.length < limit) {
+          results.push(row);
+        }
+      })
+      .on("end", () => {
+        res.status(200).json(results);
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = stationRouter;
