@@ -1,33 +1,30 @@
 const stationRouter = require("express").Router();
 const Station = require("../models/stationModel");
+const fs = require("fs");
+const csvParser = require("csv-parser");
 
-stationRouter.get("/", async (req, res) => {
+stationRouter.get("/", (req, res) => {
   try {
-    const stations = await Station.find(); // Fetch all stations from the station collection
-    res.status(200).json(stations); // Send the stations as a JSON response
+    const filePath = "./data/stations.csv";
+    const results = [];
+
+    fs.createReadStream(filePath) //read data from a filepath
+      //as reading, parse data from csv
+      .pipe(
+        csvParser({
+          mapHeaders: ({ header }) => header.trim(), //removes whitespaces/BOM from headers '\ufeff'
+        })
+      )
+      .on("data", (row) => {
+        //push each row as json object
+        results.push(row);
+      })
+      .on("end", () => {
+        res.status(200).json(results);
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
-  }
-});
-
-//Add station to db
-stationRouter.post("/add-station", async (req, res) => {
-  try {
-    const station = new Station({
-      name: req.body.name,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
-    });
-    await station.save(); // Saves the station to the database
-    res.status(201).send("Station added to MongoDB");
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

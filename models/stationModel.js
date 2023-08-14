@@ -5,14 +5,34 @@ const stationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    latitude: {
-        type: Number,
+    adress: {
+        type: String,
         required: true
     },
-    longitude : {
-        type: Number,
+    city: {
+        type: String,
         required: true
-    }
+    },
+    lat: {
+        type: String,
+        required: true
+    },
+    long: {
+        type: String,
+        required: true
+    },
+    company: {
+        type: String,
+        required: true
+    },
+    power_supply: {
+        type: String,
+        required: true
+    },
+    charging_speed: {
+        type: String,
+        required: true
+    },
 });
 
 module.exports = mongoose.model("Station", stationSchema);
