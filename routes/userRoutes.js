@@ -140,7 +140,17 @@ userRouter.get("/getStations/:userId", async (req, res) => {
 userRouter.post("/addStation/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { station_ID, station_name, X, Y } = req.body;
+    const {
+      _id,
+      name,
+      address,
+      city,
+      lat,
+      long,
+      company,
+      power_supply,
+      charging_speed,
+    } = req.body;
 
     // Find the user by ID
     const user = await User.findById(userId);
@@ -149,21 +159,28 @@ userRouter.post("/addStation/:userId", async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    // Check if the station with the same station_ID already exists
+    // Check if the station with the same ID already exists
     const existingStation = user.myStations.find(
-      (station) => station.station_ID === station_ID
+      (station) => station._id === _id
     );
 
     if (existingStation) {
-      return res.status(400).json({ msg: "Station with the same ID already exists" });
+      return res
+        .status(400)
+        .json({ msg: "Station with the same ID already exists" });
     }
 
     // Create a new station object
     const station = {
-      station_ID,
-      station_name,
-      X,
-      Y,
+      _id,
+      name,
+      address,
+      city,
+      lat,
+      long,
+      company,
+      power_supply,
+      charging_speed,
     };
 
     // Add the station to the user's stations array
@@ -190,9 +207,9 @@ userRouter.delete("/deleteStation/:userId/:stationId", async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    // Find the index of the station to be deleted in the user's stations array
+    // Find the index of the station to be deleted in the user's Fstations array
     const stationIndex = user.myStations.findIndex(
-      (station) => station.station_ID == stationId
+      (station) => station._id == stationId
     );
 
     if (stationIndex == -1) {
