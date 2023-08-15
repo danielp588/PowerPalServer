@@ -25,6 +25,10 @@ const stationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    connector: {
+        type: String,
+        required: true
+    },
     power_supply: {
         type: String,
         required: true

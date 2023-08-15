@@ -148,6 +148,7 @@ userRouter.post("/addStation/:userId", async (req, res) => {
       lat,
       long,
       company,
+      connector,
       power_supply,
       charging_speed,
     } = req.body;
@@ -179,6 +180,7 @@ userRouter.post("/addStation/:userId", async (req, res) => {
       lat,
       long,
       company,
+      connector,
       power_supply,
       charging_speed,
     };
@@ -228,5 +230,7 @@ userRouter.delete("/deleteStation/:userId/:stationId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 
 module.exports = userRouter;
