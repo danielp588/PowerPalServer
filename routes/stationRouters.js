@@ -22,10 +22,6 @@ stationRouter.get("/limit=:limit", async (req, res) => {
   }
 });
 
-stationRouter.get("/limit=:limit", async (req, res) => {
-  try {
-  } catch (error) {}
-});
 
 module.exports = stationRouter;
 
