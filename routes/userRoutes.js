@@ -198,6 +198,50 @@ userRouter.post("/addStation/:userId", async (req, res) => {
   }
 });
 
+userRouter.put(
+  "/update/station-name/user-id=:userId/station-id=:stationId",
+  async (req, res) => {
+    try {
+      const { userId, stationId } = req.params;
+      const newName = req.body.newName;
+
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+
+      // Find the index of the station to be deleted in the user's stations array
+      const stationIndex = user.myStations.findIndex(
+        (station) => station._id == stationId
+      );
+
+      if (stationIndex == -1) {
+        return res.status(404).json({ msg: "Station not found" });
+      }
+
+      if( newName == ""){
+        return res.status(404).json({ msg: "New name must not be empty" });
+      }
+    
+      // Change the station's name in the user's favourite stations array
+      user.myStations[stationIndex].name = newName;
+
+      // Mark the document as modified so that mongoose will save the changes
+      user.markModified("myStations");
+
+      // Save the updated user record
+      await user.save();
+      
+      res.status(200).json({ msg: "Station renamed successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
 userRouter.delete("/deleteStation/:userId/:stationId", async (req, res) => {
   try {
     const { userId, stationId } = req.params;
@@ -230,7 +274,5 @@ userRouter.delete("/deleteStation/:userId/:stationId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
 
 module.exports = userRouter;

@@ -23,7 +23,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  myStations : [],
+  myStations : {
+    type: Array,
+    default: []
+  }
+  ,
   adress: {
     type: {
       country: String,
