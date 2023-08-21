@@ -203,7 +203,7 @@ userRouter.put(
   async (req, res) => {
     try {
       const { userId, stationId } = req.params;
-      const newName = req.body.newName;
+      const newStationName = req.body;
 
       // Find the user by ID
       const user = await User.findById(userId);
@@ -212,7 +212,7 @@ userRouter.put(
         return res.status(404).json({ msg: "User not found" });
       }
 
-      // Find the index of the station to be deleted in the user's stations array
+      // Find the index of the station to be renamed in the user's stations array
       const stationIndex = user.myStations.findIndex(
         (station) => station._id == stationId
       );
@@ -226,7 +226,7 @@ userRouter.put(
       }
     
       // Change the station's name in the user's favourite stations array
-      user.myStations[stationIndex].name = newName;
+      user.myStations[stationIndex].name = newStationName;
 
       // Mark the document as modified so that mongoose will save the changes
       user.markModified("myStations");
