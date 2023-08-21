@@ -221,7 +221,7 @@ userRouter.put(
         return res.status(404).json({ msg: "Station not found" });
       }
 
-      if( newName == ""){
+      if( newStationName == ""){
         return res.status(404).json({ msg: "New name must not be empty" });
       }
     
