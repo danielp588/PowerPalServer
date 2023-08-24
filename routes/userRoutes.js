@@ -203,7 +203,7 @@ userRouter.put(
   async (req, res) => {
     try {
       const { userId, stationId } = req.params;
-      const newStationName = req.body;
+      const newStationName = req.body.newName;
 
       // Find the user by ID
       const user = await User.findById(userId);
