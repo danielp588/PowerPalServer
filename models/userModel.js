@@ -26,8 +26,7 @@ const userSchema = new mongoose.Schema({
   myStations : {
     type: Array,
     default: []
-  }
-  ,
+  },
   adress: {
     type: {
       country: String,
@@ -37,6 +36,10 @@ const userSchema = new mongoose.Schema({
       zip: Number,
     },
     required: false,
+  },
+  admin : {
+    type: Boolean,
+    default: false
   },
 });
 
