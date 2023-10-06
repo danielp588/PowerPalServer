@@ -276,4 +276,14 @@ userRouter.delete("/deleteStation/:userId/:stationId", async (req, res) => {
   }
 });
 
+userRouter.get("/count", async (req, res) => {
+  try {
+    const userCount = await User.countDocuments(); // Count all documents in the User collection
+    res.status(200).json({ count: userCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = userRouter;

@@ -25,6 +25,9 @@ server.use("/api/users", userRouter);
 const stationRouter = require("./routes/stationRouters");
 server.use("/api/stations", stationRouter);
 
+const stationRouter = require("./routes/statisticsRoutes");
+server.use("/api/statistics", stationRouter);
+
 server.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
