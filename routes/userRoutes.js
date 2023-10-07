@@ -52,7 +52,8 @@ userRouter.post("/register", async (req, res) => {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       email: req.body.email,
-      admin: true,
+      admin: false,
+      testAttribute: true,
     });
     await user.save(); // Saves the user to the database
     res.status(201).send("User added");
